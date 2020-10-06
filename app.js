@@ -16,33 +16,30 @@ let employees;
 
 
 // Code to use inquirer to gather information about the development team members, and to create objects for each team member (using the correct classes as blueprints!) Uses recursion to continue adding team members until "finish" is chosen.
-function createTeam () {
+function createTeam() {
     inquirer
         .prompt(
             {
                 type: "list",
                 name: "choice",
                 message: "Please choose what type of employee you would like to add.",
-                choices: ["Manager","Engineer","Intern","Finished"]
+                choices: ["Manager", "Engineer", "Intern", "Finished"]
             }
         )
-        .then(function(res){
-            switch(res.choice) {
-                case "Manager" :
-                    console.log("Now creating a manager.")
+        .then(function (res) {
+            switch (res.choice) {
+                case "Manager":
                     createManager();
                     break;
-                case "Engineer" :
-                    console.log("Now creating an engineer.")
+                case "Engineer":
                     createEngineer();
                     break;
-                case "Intern" :
-                    console.log("Now creating an intern.")
+                case "Intern":
                     createIntern();
                     break;
-                default :
+                default:
                     console.log("Now creating a web page with your employee summary.");
-                    // createPage();
+                    createPage();
                     break;
             }
         })
@@ -50,63 +47,89 @@ function createTeam () {
 
 //Adds a manager, using user input. 
 function createManager() {
+    console.log("Now creating a manager.");
     const questions = [...standardQuestions];
     questions.push(specializedQuestions[0]);
     inquirer
         .prompt(questions)
-        .then(function(res){
-            const currManager = new Manager(res.name,res.id,res.email,res.office);
-            employees.push(currManager);
-            createTeam();
+        .then(function (res) {
+
+            if (!res.name || !res.email) {
+                console.log("One or more of your answers was not defined. Please enter placeholder text if information is missing.")
+                createManager();
+            }
+            else if (!res.id || !res.office) {
+                console.log("Employee ID and office number must both be numbers. Please try again.")
+                createManager();
+            } else {
+                const currManager = new Manager(res.name, res.id, res.email, res.office);
+                employees.push(currManager);
+                createTeam();
+            }
         })
 }
 
 //Adds an Engineer, using user input. 
 function createEngineer() {
+    console.log("Now creating an engineer.")
     const questions = [...standardQuestions];
     questions.push(specializedQuestions[1]);
     inquirer
         .prompt(questions)
-        .then(function(res){
-            const currEngineer = new Engineer(res.name,res.id,res.email,res.github);
-            employees.push(currEngineer);
-            createTeam();
+        .then(function (res) {
+            if (!res.name || !res.email || !res.github) {
+                console.log("One or more of your answers was not defined. Please try again, and enter placeholder text if information is missing.")
+                createEngineer();
+            }
+            else if (!res.id) {
+                console.log("Employee ID must be a number.")
+                createEngineer();
+            } else {
+                const currEngineer = new Engineer(res.name, res.id, res.email, res.github);
+                employees.push(currEngineer);
+                createTeam();
+            }
         })
 }
 
 //Adds an Inttern, using user input. 
-function createIntern() {
+async function createIntern() {
+    console.log("Now creating an intern.")
     const questions = [...standardQuestions];
     questions.push(specializedQuestions[2]);
     inquirer
         .prompt(questions)
-        .then(function(res){
-            const currIntern = new Intern(res.name,res.id,res.email,res.school);
-            employees.push(currIntern);
-            createTeam();
+        .then(function (res) {
+            if (!res.name || !res.email || !res.school) {
+                console.log("One or more of your answers was not defined. Please enter placeholder text if information is missing.")
+                createIntern();
+            }
+            else if (!res.id) {
+                console.log("Employee ID must be a number.")
+                createIntern();
+            } else {
+                const currIntern = new Intern(res.name, res.id, res.email, res.school);
+                employees.push(currIntern);
+                createTeam();
+            }
         })
 }
+
 
 
 
 // After the user has input all employees desired, call the `render` function (required
 // above) and pass in an array containing all employee objects; the `render` function will
 // generate and return a block of HTML including templated divs for each employee!
-
-// After you have your html, you're now ready to create an HTML file using the HTML
-// returned from the `render` function. Now write it to a file named `team.html` in the
-// `output` folder. You can use the variable `outputPath` above target this location.
-// Hint: you may need to check if the `output` folder exists and create it if it
-// does not.
-
-// HINT: each employee type (manager, engineer, or intern) has slightly different
-// information; write your code to ask different questions via inquirer depending on
-// employee type.
-
+function createPage() {
+    const renderedHtml = render(employees);
+    fs.writeFile(outputPath, renderedHtml, err => console.log(err));
+    return;
+}
 
 
 //Initializes the CLI program
-function startBuildingPage () {
+function startBuildingPage() {
     employees = [];
     console.log("Welcome to the team summary building tool.")
     createTeam();
@@ -141,12 +164,12 @@ const specializedQuestions = [
         name: "office"
     },
     {
-        type: "number",
+        type: "input",
         message: "What is your engineer's github username?",
         name: "github"
     },
     {
-        type: "number",
+        type: "input",
         message: "What is your intern's school?",
         name: "school"
     }
