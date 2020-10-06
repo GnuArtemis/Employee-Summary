@@ -14,7 +14,7 @@ const { type } = require("os");
 
 let employees;
 
-// const standardQuestions = 
+
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
 function createTeam () {
@@ -35,11 +35,11 @@ function createTeam () {
                     break;
                 case "Engineer" :
                     console.log("Now creating an engineer.")
-                    // createEngineer();
+                    createEngineer();
                     break;
                 case "Intern" :
                     console.log("Now creating an intern.")
-                    // createIntern();
+                    createIntern();
                     break;
                 default :
                     console.log("Now creating a web page with your employee summary.");
@@ -50,34 +50,42 @@ function createTeam () {
 }
 
 function createManager() {
+    const questions = [...standardQuestions];
+    questions.push(specializedQuestions[0]);
     inquirer
-        .prompt([
-            {
-                type: "input",
-                message: "What is your manager's name?",
-                name: "name"
-            },
-            {
-                type: "number",
-                message: "What is your manager's ID?",
-                name: "id"
-            },
-            {
-                type: "input",
-                message: "What is your manager's email address?",
-                name: "email"
-            },
-            {
-                type: "number",
-                message: "What is your manager's office number?",
-                name: "office"
-            }
-        ]).then(function(res){
+        .prompt(questions)
+        .then(function(res){
             const currManager = new Manager(res.name,res.id,res.email,res.office);
             employees.push(currManager);
             createTeam();
         })
 }
+
+function createEngineer() {
+    const questions = [...standardQuestions];
+    questions.push(specializedQuestions[1]);
+    inquirer
+        .prompt(questions)
+        .then(function(res){
+            const currEngineer = new Engineer(res.name,res.id,res.email,res.github);
+            employees.push(currEngineer);
+            createTeam();
+        })
+}
+
+function createIntern() {
+    const questions = [...standardQuestions];
+    questions.push(specializedQuestions[2]);
+    inquirer
+        .prompt(questions)
+        .then(function(res){
+            const currIntern = new Intern(res.name,res.id,res.email,res.school);
+            employees.push(currIntern);
+            createTeam();
+        })
+}
+
+
 
 // After the user has input all employees desired, call the `render` function (required
 // above) and pass in an array containing all employee objects; the `render` function will
@@ -100,3 +108,40 @@ function startBuildingPage () {
 }
 
 startBuildingPage();
+
+
+const standardQuestions = [
+    {
+        type: "input",
+        message: "What is their name?",
+        name: "name"
+    },
+    {
+        type: "number",
+        message: "What is their ID?",
+        name: "id"
+    },
+    {
+        type: "input",
+        message: "What is their email address?",
+        name: "email"
+    }
+];
+
+const specializedQuestions = [
+    {
+        type: "number",
+        message: "What is your manager's office number?",
+        name: "office"
+    },
+    {
+        type: "number",
+        message: "What is your engineer's github username?",
+        name: "github"
+    },
+    {
+        type: "number",
+        message: "What is your intern's school?",
+        name: "school"
+    },
+]
