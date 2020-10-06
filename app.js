@@ -9,10 +9,75 @@ const OUTPUT_DIR = path.resolve(__dirname, "output");
 const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
+const Choices = require("inquirer/lib/objects/choices");
+const { type } = require("os");
 
+let employees;
 
+// const standardQuestions = 
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
+function createTeam () {
+    inquirer
+        .prompt(
+            {
+                type: "list",
+                name: "choice",
+                message: "Please choose what type of employee you would like to add.",
+                choices: ["Manager","Engineer","Intern","Finished"]
+            }
+        )
+        .then(function(res){
+            switch(res.choice) {
+                case "Manager" :
+                    console.log("Now creating a manager.")
+                    createManager();
+                    break;
+                case "Engineer" :
+                    console.log("Now creating an engineer.")
+                    // createEngineer();
+                    break;
+                case "Intern" :
+                    console.log("Now creating an intern.")
+                    // createIntern();
+                    break;
+                default :
+                    console.log("Now creating a web page with your employee summary.");
+                    // createPage();
+                    break;
+            }
+        })
+}
+
+function createManager() {
+    inquirer
+        .prompt([
+            {
+                type: "input",
+                message: "What is your manager's name?",
+                name: "name"
+            },
+            {
+                type: "number",
+                message: "What is your manager's ID?",
+                name: "id"
+            },
+            {
+                type: "input",
+                message: "What is your manager's email address?",
+                name: "email"
+            },
+            {
+                type: "number",
+                message: "What is your manager's office number?",
+                name: "office"
+            }
+        ]).then(function(res){
+            const currManager = new Manager(res.name,res.id,res.email,res.office);
+            employees.push(currManager);
+            createTeam();
+        })
+}
 
 // After the user has input all employees desired, call the `render` function (required
 // above) and pass in an array containing all employee objects; the `render` function will
@@ -28,8 +93,10 @@ const render = require("./lib/htmlRenderer");
 // information; write your code to ask different questions via inquirer depending on
 // employee type.
 
-// HINT: make sure to build out your classes first! Remember that your Manager, Engineer,
-// and Intern classes should all extend from a class named Employee; see the directions
-// for further information. Be sure to test out each class and verify it generates an
-// object with the correct structure and methods. This structure will be crucial in order
-// for the provided `render` function to work! ```
+function startBuildingPage () {
+    employees = [];
+    console.log("Welcome to the team summary building tool.")
+    createTeam();
+}
+
+startBuildingPage();
