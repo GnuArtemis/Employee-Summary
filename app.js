@@ -15,8 +15,7 @@ const { type } = require("os");
 let employees;
 
 
-// Write code to use inquirer to gather information about the development team members,
-// and to create objects for each team member (using the correct classes as blueprints!)
+// Code to use inquirer to gather information about the development team members, and to create objects for each team member (using the correct classes as blueprints!) Uses recursion to continue adding team members until "finish" is chosen.
 function createTeam () {
     inquirer
         .prompt(
@@ -49,6 +48,7 @@ function createTeam () {
         })
 }
 
+//Adds a manager, using user input. 
 function createManager() {
     const questions = [...standardQuestions];
     questions.push(specializedQuestions[0]);
@@ -61,6 +61,7 @@ function createManager() {
         })
 }
 
+//Adds an Engineer, using user input. 
 function createEngineer() {
     const questions = [...standardQuestions];
     questions.push(specializedQuestions[1]);
@@ -73,6 +74,7 @@ function createEngineer() {
         })
 }
 
+//Adds an Inttern, using user input. 
 function createIntern() {
     const questions = [...standardQuestions];
     questions.push(specializedQuestions[2]);
@@ -101,6 +103,9 @@ function createIntern() {
 // information; write your code to ask different questions via inquirer depending on
 // employee type.
 
+
+
+//Initializes the CLI program
 function startBuildingPage () {
     employees = [];
     console.log("Welcome to the team summary building tool.")
@@ -109,7 +114,7 @@ function startBuildingPage () {
 
 startBuildingPage();
 
-
+//Questions to generate the information required for all employee types: name, ID, and email.
 const standardQuestions = [
     {
         type: "input",
@@ -128,6 +133,7 @@ const standardQuestions = [
     }
 ];
 
+//Questions to generate the information required only for one employee type: office number, github username, and school.
 const specializedQuestions = [
     {
         type: "number",
@@ -143,5 +149,5 @@ const specializedQuestions = [
         type: "number",
         message: "What is your intern's school?",
         name: "school"
-    },
+    }
 ]
