@@ -21,6 +21,10 @@ A display of the command line interface detailing the process of adding employee
 
 A display of the resulting webpage.
 
+[YouTube Demonstration](https://youtu.be/SUQCSalN19w)
+
+The YouTube link above demonstrates how to use this app.
+
 ## Technologies 
 
 [node.js](https://nodejs.org/en/)
